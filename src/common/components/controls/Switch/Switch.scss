@@ -1,0 +1,52 @@
+.switch {
+  display: none;
+}
+
+.container {
+  width: 100%;
+  text-align: center;
+}
+
+.body {
+  $handle-radius: 20px;
+  $body-height: $handle-radius;
+  $body-width: 100%;
+
+  display: block;
+  margin-top: 5px;
+  width: $body-width;
+  height: $body-height;
+  background-color: $theme-color-secondary;
+  position: relative;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 200ms all ease-in;
+
+  &::before {
+    $box-shadow-color: rgba(0, 0, 0, 0.8);
+    $color-white: #fff;
+    $handle-margin: 2px;
+
+    content: " ";
+    background-color: $color-white;
+    width: $handle-radius - $handle-margin;
+    height: $handle-radius - $handle-margin;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+
+    left: $handle-margin;
+    top: $handle-margin / 2;
+
+    box-shadow: 0 1px 1px $box-shadow-color;
+    transition: 200ms all ease-in;
+  }
+
+  &.active {
+    background-color: $theme-color-primary;
+
+    &::before {
+      left: calc(100% - #{$handle-radius});
+    }
+  }
+}

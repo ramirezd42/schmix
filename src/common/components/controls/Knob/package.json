@@ -1,0 +1,6 @@
+{
+  "name": "Knob",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Knob.jsx"
+}

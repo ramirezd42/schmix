@@ -1,0 +1,37 @@
+//THEMING OPTIONS
+$theme-color-white: #fff;
+
+$theme-color-primary: #6ac491;
+$theme-color-secondary: #FF736A;
+$theme-color-background: $theme-color-white;
+$theme-color-visited: #99a;
+$theme-color-text: #020405;
+$theme-color-muted: #A5A5A5;
+$theme-hover-color: $theme-color-primary;
+$theme-default-font-weight: 300;
+$theme-button-font-weight: 500;
+$theme-primary-link-color: $theme-color-primary;
+
+//BOOTSTRAP ASSIGNMENTS
+$theme-navbar-height: 50px;
+
+//BRANDING COLORS
+$facebook-blue: #3B5998;
+$google-red: #D50F25;
+
+//BOOTSTRAP OVERRIDES
+$font-family-sans-serif: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$text-color: $theme-color-text;
+$body-bg: $theme-color-background;
+$border-radius-base: 2px;
+$headings-font-weight: $theme-default-font-weight;
+$brand-primary: $theme-color-primary;
+$input-border-focus: $theme-color-primary;
+
+$btn-primary-bg: $theme-color-primary;
+$btn-primary-color: $theme-color-white;
+$input-border-focus: $theme-color-primary;
+
+$link-color: $theme-color-text;
+$link-hover-color: $theme-hover-color;
+$link-hover-decoration: none;

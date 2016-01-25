@@ -1,0 +1,54 @@
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  text-align: center;
+}
+
+.knob {
+  width: 100%;
+  height: auto;
+  padding-top: 100%;
+  background-image: url("./knob-scale.svg");
+  background-size: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.overlay {
+  flex: none;
+  width: 100%;
+  height: auto;
+  padding-top: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.pointer {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 50%;
+  z-index: 1;
+  align-items: center;
+  justify-content: flex-start;
+
+  &::before {
+    content: "";
+    width: 5%;
+    height: 5%;
+    margin: 20%;
+    border-radius: 50%;
+    background: $theme-color-primary;
+  }
+}
