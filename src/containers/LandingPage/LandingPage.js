@@ -41,7 +41,8 @@ class LandingPage extends Component {
             <div className={styles.details}>
               <h3>Bypass</h3>
               <p>
-                The bypass switch bypasses the effect the input signal directly to the output node.
+                The bypass switch bypasses the effect
+                and sends the input signal directly to the output node.
               </p>
 
               <h3>Feedback</h3>
