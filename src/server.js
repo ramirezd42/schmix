@@ -59,9 +59,6 @@ server.get('*', (req, res, next) => {
       } else if (renderProps === null) {
         res.status(404).send('Not found');
       } else {
-        data.title = 'DME';
-        // data.body = renderToString(<RoutingContext history={history}
-        //                                            location={location} {...renderProps}/>);
         data.css = css.join('');
         const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
         res.status(statusCode).send(`<!doctype html>\n${html}`);
