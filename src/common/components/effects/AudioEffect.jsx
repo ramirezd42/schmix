@@ -1,19 +1,36 @@
-import React from 'react';
-class AudioEffect extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (this.props.inputNode !== nextProps.inputNode) {
-      this.connectInput(nextProps.inputNode);
+import React, { Component } from 'react';
+class AudioEffect extends Component {
+  constructor(props) {
+    super(props);
+    this.initializeAudioNodes(props);
+
+    if (props.inputNode) {
+      this.connectInput(props.inputNode);
     }
-    if (this.props.outputNode !== nextProps.outputNode) {
-      this.connectToOutput(nextProps.outputNode);
+
+    if (props.outputNode) {
+      this.connectToOutput(props.outputNode);
     }
-  }
-  constuctor() {
+
+    if (typeof this.initializeAudioNodes !== 'function') {
+      throw new TypeError('Must provide initializeAudioNodes() implementation');
+    }
+
     if (typeof this.connectInput !== 'function') {
       throw new TypeError('Must provide connectInput() implementation');
     }
+
     if (typeof this.connectToOutput !== 'function') {
       throw new TypeError('Must provide connectToOutput() implementation');
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.inputNode !== nextProps.inputNode && nextProps.inputNode) {
+      this.connectInput(nextProps.inputNode);
+    }
+    if (this.props.outputNode !== nextProps.outputNode && nextProps.outputNode) {
+      this.connectToOutput(nextProps.outputNode);
     }
   }
 }

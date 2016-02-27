@@ -3,30 +3,29 @@ import AudioEffect from '../AudioEffect';
 import DelayInterface from './DelayInterface';
 class Delay extends AudioEffect {
 
-  componentDidMount() {
-    this.initializeAudioNodes();
+  constructor(props) {
+    super(props);
   }
 
   componentWillReceiveProps(nextProps) {
     super.componentWillReceiveProps(nextProps);
-    if (this.props.state.delayAmount !== nextProps.state.delayAmount) {
-      this.delayNode.delayTime.value = nextProps.state.delayAmount / 1000;
-    }
-    if (this.props.state.feedback !== nextProps.state.feedback) {
-      this.feedbackNode.gain.value = nextProps.state.feedback / 100;
-    }
-    if (this.props.state.bypass !== nextProps.state.bypass) {
-      this.bypassNode.gain.value = !nextProps.state.bypass ? 1 : 0;
-    }
+    this.delayNode.delayTime.value = nextProps.state.delayAmount / 1000;
+    this.feedbackNode.gain.value = nextProps.state.feedback / 100;
+    this.bypassNode.gain.value = !nextProps.state.bypass ? 1 : 0;
   }
 
   // TODO: figure out what part of the component lifecycle this should be called during
-  initializeAudioNodes() {
+  initializeAudioNodes(props) {
     // setup nodes
-    this.delayNode = this.props.audioContext.createDelay(128);
-    this.feedbackNode = this.props.audioContext.createGain();
-    this.bypassNode = this.props.audioContext.createGain();
-    this.masterNode = this.props.audioContext.createGain();
+    this.delayNode = props.audioContext.createDelay(128);
+    this.delayNode.delayTime.value = props.state.delayAmount / 1000;
+
+    this.feedbackNode = props.audioContext.createGain();
+    this.feedbackNode.gain.value = props.state.feedback / 100;
+
+    this.bypassNode = props.audioContext.createGain();
+    this.bypassNode.gain.value = props.state.bypass / 100;
+    this.masterNode = props.audioContext.createGain();
 
   // wire up nodes
     this.delayNode.connect(this.feedbackNode);

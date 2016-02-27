@@ -49,7 +49,6 @@ class Knob extends React.Component {
 
   moveKnobToPoint(elem, x, y) {
     let degrees = radiansToDegrees(positionToRadians(elem, x, y));
-    console.log(degrees);
     degrees = Math.min(degrees, maxDegrees);
     degrees = Math.max(degrees, minDegrees);
 
