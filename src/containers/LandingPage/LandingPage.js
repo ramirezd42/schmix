@@ -9,22 +9,51 @@ import { connect } from 'react-redux';
 
 import styles from './LandingPage.scss';
 
+function getFileSourceNode(path, audioContext) {
+  const node = audioContext.createBufferSource();
+  return fetch(path)
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      audioContext.decodeAudioData(buffer, decodedData => {
+        node.buffer = decodedData;
+        node.loop = true;
+      });
+      node.start(0);
+      return node;
+    });
+}
+
+function getStreamSourceNode(audioContext) {
+  return navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => audioContext.createMediaStreamSource(stream));
+}
+
 class LandingPage extends Component {
   constructor(props) {
     super(props);
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.state = {
-      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
-      audioStreamNode: null,
-      destinationNode: null
+      audioContext,
+      inputNode: null,
+      outputNode: audioContext.destination
     };
+    this.selectSourceNode(props.sourceNode, this.state.audioContext);
   }
 
-  componentDidMount() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      this.setState({ audioStreamNode: this.state.audioContext.createMediaStreamSource(stream) });
-      this.setState({ destinationNode: this.state.audioContext.destination });
-    });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sourceNode !== this.props.sourceNode) {
+      this.selectSourceNode(nextProps.sourceNode, this.state.audioContext);
+    }
+  }
+
+  selectSourceNode(name, audioContext) {
+    if (name === 'file') {
+      getFileSourceNode('https://s3.amazonaws.com/demo-audio/acoustic-guitar.mp3', audioContext)
+        .then(node => this.setState({ inputNode: node }));
+    } else if (name === 'stream') {
+      getStreamSourceNode(audioContext)
+        .then(node => this.setState({ inputNode: node }));
+    }
   }
 
   render() {
@@ -60,8 +89,8 @@ class LandingPage extends Component {
             <hr/>
             <Delay
               audioContext={this.state.audioContext}
-              inputNode={this.state.audioStreamNode}
-              outputNode={this.state.destinationNode}
+              inputNode={this.state.inputNode}
+              outputNode={this.state.outputNode}
               state={this.props.delayState}
               setBypass={this.props.setBypass}
               setFeedback={this.props.setFeedback}
@@ -72,14 +101,15 @@ class LandingPage extends Component {
       </div>
     );
   }
-
 }
 
 function mapStateToProps(state) {
   return {
+    sourceNode: state.landingPage.sourceNode,
     delayState: state.delay
   };
 }
+
 export default connect(
   mapStateToProps,
   Object.assign({}, delayActionCreators)
