@@ -26,10 +26,13 @@ class AudioEffect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.inputNode !== nextProps.inputNode && nextProps.inputNode) {
-      this.connectInput(nextProps.inputNode);
+    if (this.props.inputNode !== nextProps.inputNode) {
+      if (this.props.inputNode) {
+        this.props.inputNode.disconnect();
+      }
+      this.connectInput(nextProps.inputNode, this.props.inputNode);
     }
-    if (this.props.outputNode !== nextProps.outputNode && nextProps.outputNode) {
+    if (this.props.outputNode !== nextProps.outputNode) {
       this.connectToOutput(nextProps.outputNode);
     }
   }
