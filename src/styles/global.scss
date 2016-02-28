@@ -6,3 +6,8 @@
 html {
   font-weight: $theme-default-font-weight;
 }
+
+button,
+.btn {
+  text-transform: uppercase;
+}

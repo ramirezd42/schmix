@@ -1,10 +1,12 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-no-bind */
+
 import 'webrtc-adapter-test';
 import React, { Component } from 'react';
 import Delay from '../../common/components/effects/Delay';
-import { Navbar, Grid, Col } from 'react-bootstrap';
+import { Navbar, Grid, Col, Button, ButtonToolbar } from 'react-bootstrap';
 
 import * as delayActionCreators from '../../common/components/effects/Delay/Delay.creators';
+import * as landingPageCreators from './LandingPage.creators';
 import { connect } from 'react-redux';
 
 import styles from './LandingPage.scss';
@@ -37,7 +39,10 @@ class LandingPage extends Component {
       inputNode: null,
       outputNode: audioContext.destination
     };
-    this.selectSourceNode(props.sourceNode, this.state.audioContext);
+  }
+
+  componentDidMount() {
+    this.selectSourceNode(this.props.sourceNode, this.state.audioContext);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -48,9 +53,10 @@ class LandingPage extends Component {
 
   selectSourceNode(name, audioContext) {
     if (name === 'file') {
+      this.setState({ fileLoading: true });
       getFileSourceNode('https://s3.amazonaws.com/demo-audio/acoustic-guitar.mp3', audioContext)
-        .then(node => this.setState({ inputNode: node }));
-    } else if (name === 'stream') {
+        .then(node => this.setState({ inputNode: node, fileLoading: false }));
+    } else if (name === 'device') {
       getStreamSourceNode(audioContext)
         .then(node => this.setState({ inputNode: node }));
     }
@@ -66,6 +72,27 @@ class LandingPage extends Component {
         </Navbar>
         <Grid className={styles.content}>
           <Col sm={8} smOffset={2}>
+            <p>Input Source:</p>
+            <ButtonToolbar>
+              <Button
+                bsStyle="primary"
+                onClick={() => this.props.setSourceNode('file')}
+                className={styles.sourceSelect}
+                disabled={this.props.sourceNode === 'file'}
+              >
+                Audio File {this.state.fileLoading ? ' (loading...)' : ''}
+              </Button>
+              <Button
+                bsStyle="primary"
+                onClick={() => this.props.setSourceNode('device')}
+                className={styles.sourceSelect}
+                disabled={this.props.sourceNode === 'device'}
+                value="device"
+              >
+                Device
+              </Button>
+            </ButtonToolbar>
+            <hr/>
             <h2>Delay Effect</h2>
             <div className={styles.details}>
               <h3>Bypass</h3>
@@ -103,6 +130,15 @@ class LandingPage extends Component {
   }
 }
 
+LandingPage.propTypes = {
+  delayState: React.PropTypes.object,
+  sourceNode: React.PropTypes.string,
+  setSourceNode: React.PropTypes.func,
+  setBypass: React.PropTypes.func,
+  setDelayAmount: React.PropTypes.func,
+  setFeedback: React.PropTypes.func
+};
+
 function mapStateToProps(state) {
   return {
     sourceNode: state.landingPage.sourceNode,
@@ -112,5 +148,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  Object.assign({}, delayActionCreators)
+  Object.assign({}, delayActionCreators, landingPageCreators)
 )(LandingPage);

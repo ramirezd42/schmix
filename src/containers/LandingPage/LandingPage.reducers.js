@@ -1,5 +1,4 @@
-import { SOURCE_NODE_SET } from './LandingPage.actions';
-
+export const SOURCE_NODE_SET = 'SOURCE_NODE_SET';
 const initialState = {
   sourceNode: 'file'
 };
