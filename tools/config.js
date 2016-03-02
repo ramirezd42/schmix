@@ -1,19 +1,52 @@
-import path from 'path';
-import webpack from 'webpack';
-import merge from 'lodash/object/merge';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import pkg from '../package.json';
-import util from 'util';
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('lodash/object/merge');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const pkg = require('../package.json');
+const util = require('util');
 
 const DEBUG = process.env.NODE_ENV !== 'production';
 const WATCH = global.WATCH === undefined ? false : global.WATCH;
 const VERBOSE = process.argv.includes('--verbose');
 const STYLE_LOADER = 'style-loader/useable';
-let CSS_LOADER =
-  'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]';
+
+let BASE_CSS_LOADER = 'css-loader';
 if (!DEBUG) {
-  CSS_LOADER += 'css-loader?minimize';
+  BASE_CSS_LOADER += 'css-loader?minimize';
 }
+
+
+let GLOBAL_CSS_LOADER = 'css-loader';
+let MODULE_CSS_LOADER =
+  'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]';
+
+if (!DEBUG) {
+  GLOBAL_CSS_LOADER = `${GLOBAL_CSS_LOADER}?minimize`;
+  MODULE_CSS_LOADER = `${MODULE_CSS_LOADER}&minimize`;
+}
+
+const globalStyleLoader = {
+  test: /\.scss$/,
+  exclude: pathStr => pathStr.startsWith(path.resolve(__dirname, '..'))
+      && ! pathStr.startsWith(path.resolve(__dirname, '../src/styles/global')),
+  loader: ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
+    `${GLOBAL_CSS_LOADER}`,
+    'resolve-url',
+    'sass?sourceMap&outputStyle=expanded'
+  ].join('!'))
+};
+
+const moduleStyleLoader = {
+  test: /\.scss$/,
+  include: pathStr => pathStr.startsWith(path.resolve(__dirname, '../src')),
+  exclude: pathStr => pathStr.startsWith(path.resolve(__dirname, '../src/styles/global')),
+  loader: ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
+    `${MODULE_CSS_LOADER}`,
+    'resolve-url',
+    'sass?sourceMap&outputStyle=expanded'
+  ].join('!'))
+};
+
 const AUTOPREFIXER_BROWSERS = [
   'Android 2.3',
   'Android >= 4',
@@ -33,7 +66,12 @@ const JS_LOADER = {
   include: [
     path.resolve(__dirname, '../src'),
   ],
-  loader: 'babel-loader',
+  loader: 'babel',
+  query: {
+    cacheDirectory: true,
+    presets: ['es2015', 'stage-0', 'react'],
+    plugins: ['transform-decorators-legacy']
+  }
 };
 
 // Common configuration chunk to be used for both
@@ -66,7 +104,11 @@ const config = {
   ],
 
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx']
+    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx'],
+    root: [
+      path.resolve(__dirname, '../src'),
+      path.resolve(__dirname, '../node_modules')
+    ]
   },
 
   module: {
@@ -80,7 +122,7 @@ const config = {
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000'
     }, {
-      test: /\.(eot|tft|wav|mp3)$/,
+      test: /\.(ttf|eot|wav|mp3)$/,
       loader: 'file-loader'
     }]
   },
@@ -102,7 +144,6 @@ const styleBundleName = DEBUG ? 'styles.css' : util.format('styles.%s.css', pkg.
 const appConfig = merge({}, config, {
   entry: [
     ...(WATCH ? ['webpack-hot-middleware/client'] : []),
-    'bootstrap-loader',
     './src/app.js'
   ],
   output: {
@@ -135,31 +176,29 @@ const appConfig = merge({}, config, {
       WATCH ? {
         ...JS_LOADER,
         query: {
+          plugins: [
+            // must be an array with options object as second item
+            ['react-transform', {
+              // must be an array of objects
+              transforms: [{
+                // can be an NPM module name or a local path
+                transform: 'react-transform-hmr',
+                // see transform docs for "imports" and "locals" dependencies
+                imports: ['react'],
+                locals: ['module']
+              }]
+              // by default we only look for `React.createClass` (and ES6 classes)
+              // but you can tell the plugin to look for different component factories:
+              // factoryMethods: ["React.createClass", "createClass"]
+            }]
+          ]
           // Wraps all React components into arbitrary transforms
           // https://github.com/gaearon/babel-plugin-react-transform
-          plugins: ['react-transform'],
-          extra: {
-            'react-transform': {
-              transforms: [
-                {
-                  transform: 'react-transform-hmr',
-                  imports: ['react'],
-                  locals: ['module'],
-                }
-              ],
-            },
-          },
         },
       } : JS_LOADER,
       ...config.module.loaders,
-      {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
-          `${CSS_LOADER}`,
-          'sass?outputStyle=expanded',
-          'sass-resources'
-        ].join('!'))
-      },
+      globalStyleLoader,
+      moduleStyleLoader,
       { test: /\.(ttf|eot)$/, loader: 'file' }
     ]
   },
@@ -208,15 +247,9 @@ const serverConfig = merge({}, config, {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
-      {
-        test: /\.scss$/,
-        loader:
-          ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
-            `${CSS_LOADER}`,
-            'sass?outputStyle=expanded',
-            'sass-resources'
-          ].join('!'))
-      }]
+      globalStyleLoader,
+      moduleStyleLoader
+    ]
   },
   sassResources: [
     './src/styles/variables.scss',
@@ -224,4 +257,4 @@ const serverConfig = merge({}, config, {
   ],
 });
 
-export default [appConfig, serverConfig];
+module.exports = [appConfig, serverConfig];

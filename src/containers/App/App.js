@@ -1,3 +1,4 @@
+import '../../styles/global/base.scss';
 import React, { PropTypes, Component } from 'react';
 
 export default class App extends Component {

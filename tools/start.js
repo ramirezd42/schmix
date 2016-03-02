@@ -5,7 +5,7 @@ global.WATCH = true;
  * synchronizing URLs, interactions and code changes across multiple devices.
  */
 
-export default async () => {
+module.exports = async () => {
   await require('./build')();
   await require('./serve')();
 

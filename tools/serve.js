@@ -7,15 +7,15 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import path from 'path';
-import cp from 'child_process';
-import watch from './lib/watch';
-import logger from './lib/logger';
+const path = require('path');
+const cp = require('child_process');
+const watch = require('./lib/watch');
+const logger = require('./lib/logger');
 
 /**
  * Launches Node.js/Express web server in a separate (forked) process.
  */
-export default () => new Promise((resolve, reject) => {
+module.exports = () => new Promise((resolve, reject) => {
   logger.log('serve');
 
   function start() {
