@@ -1,10 +1,10 @@
-import del from 'del';
-import fs from './lib/fs';
+const del = require('del');
+const fs = require('./lib/fs');
 
 /**
  * Cleans up the output (build) directory.
  */
-export default async () => {
+module.exports = async () => {
   await del(['.tmp', 'build/*', '!build/.git'], { dot: true });
   await fs.makeDir('build/public');
 };

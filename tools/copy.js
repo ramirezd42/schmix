@@ -1,14 +1,14 @@
-import path from 'path';
-import replace from 'replace';
-import copy from './lib/copy';
-import watch from './lib/watch';
-import logger from './lib/logger';
+const path = require('path');
+const replace = require('replace');
+const copy = require('./lib/copy');
+const watch = require('./lib/watch');
+const logger = require('./lib/logger');
 
 /**
  * Copies static files such as robots.txt, favicon.ico to the
  * output (build) folder.
  */
-export default async () => {
+module.exports = async () => {
   logger.log('copy');
   await Promise.all([
     // Static files

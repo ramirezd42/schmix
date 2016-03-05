@@ -1,12 +1,12 @@
-import webpack from 'webpack';
-import config from './config';
-import logger from './lib/logger';
+const webpack = require('webpack');
+const config = require('./config');
+const logger = require('./lib/logger');
 
 /**
  * Bundles JavaScript, CSS and images into one or more packages
  * ready to be used in a browser.
  */
-export default async () => new Promise((resolve, reject) => {
+module.exports = async () => new Promise((resolve, reject) => {
   logger.log('bundle');
   const bundler = webpack(config);
   let bundlerRunCount = 0;

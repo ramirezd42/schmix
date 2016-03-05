@@ -1,13 +1,13 @@
-import browserSync from 'browser-sync';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
+const browserSync = require('browser-sync');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const webpackConfig = require('./config')[0]; // Client-side bundle configuration
 const bundler = webpack(webpackConfig);
 const port = process.env.PORT || 8080;
 
-export default function browsersync() {
+module.exports = function browsersync() {
   browserSync({
     proxy: {
 
@@ -40,4 +40,4 @@ export default function browsersync() {
       'build/templates/**/*.*'
     ]
   });
-}
+};

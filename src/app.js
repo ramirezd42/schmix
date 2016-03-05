@@ -1,4 +1,4 @@
-import 'babel/polyfill';
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -26,7 +26,7 @@ function render() {
     // In production, you should ensure process.env.NODE_ENV
     // is envified so that Uglify can eliminate this
     // module and its dependencies as dead code.
-    require('./devtools/createDevToolsWindow')(store);
+    require('./devtools/createDevToolsWindow').default(store);
   }
 }
 

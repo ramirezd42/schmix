@@ -1,6 +1,6 @@
-import logger from './lib/logger';
+const logger = require('./lib/logger');
 
-export default async () => {
+module.exports = async () => {
   logger.log('build');
   await require('./clean')();
   await require('./copy')();
