@@ -11,6 +11,7 @@ $theme-hover-color: $theme-color-primary;
 $theme-default-font-weight: 300;
 $theme-button-font-weight: 500;
 $theme-primary-link-color: $theme-color-primary;
+$theme-border-radius: 2px;
 
 //BOOTSTRAP ASSIGNMENTS
 $theme-navbar-height: 50px;
@@ -24,7 +25,7 @@ $btn-font-weight: 300;
 $font-family-sans-serif: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $text-color: $theme-color-text;
 $body-bg: $theme-color-background;
-$border-radius-base: 2px;
+$border-radius-base: $theme-border-radius;
 $headings-font-weight: $theme-default-font-weight;
 $brand-primary: $theme-color-primary;
 $input-border-focus: $theme-color-primary;

@@ -55,6 +55,7 @@
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0-rc1",
+    "react-slider": "^0.6.1",
     "react-transform-hmr": "^1.0.1",
     "redux": "^3.0.4",
     "redux-devtools": "^3.0.0",

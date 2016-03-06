@@ -25,6 +25,12 @@ class Knob extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      this._updateDegrees(nextProps.value);
+    }
+  }
+
   @autobind
   handleMouseDown(evt) {
     this.setState({
@@ -56,22 +62,26 @@ class Knob extends React.Component {
     this.setState({
       degree: degrees
     });
-    this.props.setValue(value);
+    this.props.setValue(parseFloat(value.toFixed(this.props.precision)));
   }
 
   moveKnobToValue(value) {
+    this._updateDegrees(value);
+    this.props.setValue(parseFloat(value.toFixed(this.props.precision)));
+  }
+
+  _updateDegrees(value) {
     const degrees = valueToDegrees(value, this.props.min, this.props.max, minDegrees, maxDegrees);
     this.setState({
       degree: degrees
     });
-    this.props.setValue(value);
   }
 
   render() {
     return (
       <div className={styles.container}>
         <label>{this.props.label}</label>
-        <div className={styles.knob + ' knob'}
+        <div className={`${styles.knob} knob`}
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseMove={this.handleMouseMove}
@@ -85,7 +95,7 @@ class Knob extends React.Component {
           >
           </div>
         </div>
-        <div className={styles.label}>{Math.round(this.props.value)}</div>
+        <div className={styles.label}>{this.props.value}</div>
       </div>
     );
   }
@@ -96,7 +106,8 @@ Knob.propTypes = {
   value: React.PropTypes.number.isRequired,
   min: React.PropTypes.number.isRequired,
   max: React.PropTypes.number.isRequired,
-  setValue: React.PropTypes.func.isRequired
+  setValue: React.PropTypes.func.isRequired,
+  precision: React.PropTypes.number
 };
 
 export default Knob;

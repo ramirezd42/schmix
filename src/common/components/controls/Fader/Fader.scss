@@ -1,0 +1,51 @@
+@import "~styles/global/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
+$handle-width: 20%;
+$handle-inner-width: 75%;
+$strip-width: 1px;
+
+.container {
+  width: 100%;
+  text-align: center;
+}
+
+.control {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.fader {
+  height: 300px;
+  width: 100%;
+  background: $theme-color-white;
+  position: relative;
+
+  &::after {
+    width: $strip-width;
+    height: 100%;
+    content: " ";
+    background-color: $theme-color-secondary;
+    z-index: 99px;
+    position: absolute;
+    left: 50%;
+    margin-left: - $strip-width / 2;
+  }
+}
+
+.handle {
+  font-size: 0.9em;
+  border-radius: 50%;
+  text-align: center;
+  background-color: $theme-color-primary;
+  box-shadow: 0 1px 2px $theme-color-muted;
+  cursor: pointer;
+  width: $handle-width;
+  height: auto;
+  padding-top: $handle-width;
+  position: relative;
+  left: 50%;
+  margin-left: - $handle-width / 2;
+}
