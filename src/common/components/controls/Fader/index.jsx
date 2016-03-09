@@ -24,7 +24,7 @@ class Fader extends Component {
             invert
           />
         </div>
-        <div>{this.props.value}</div>
+        <div className={styles.label}>{this.props.value}</div>
       </div>
     );
   }

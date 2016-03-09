@@ -1,3 +1,12 @@
+@import "~styles/global/variables";
+
+$border-color: lighten($theme-color-muted, 20);
+
 .container {
-  width: 100px;
+  border-left: 1px solid $border-color;
+  padding-bottom: 10px;
+
+  &:last-child {
+    border-right: 1px solid $border-color;
+  }
 }
