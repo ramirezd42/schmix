@@ -1,7 +1,7 @@
 import React from 'react';
-import AudioEffect from '../AudioEffect';
+import AudioContainer from '../../AudioContainer';
 import DelayInterface from './DelayInterface';
-class Delay extends AudioEffect {
+class Delay extends AudioContainer {
 
   constructor(props) {
     super(props);

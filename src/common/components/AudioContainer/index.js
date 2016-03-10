@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-class AudioEffect extends Component {
+class AudioContainer extends Component {
   constructor(props) {
     super(props);
     this.initializeAudioNodes(props);
@@ -38,9 +38,9 @@ class AudioEffect extends Component {
   }
 }
 
-AudioEffect.propTypes = {
+AudioContainer.propTypes = {
   inputNode: React.PropTypes.object,
   outputNode: React.PropTypes.object,
 };
 
-export default AudioEffect;
+export default AudioContainer;
