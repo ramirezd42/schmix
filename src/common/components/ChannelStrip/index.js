@@ -41,17 +41,17 @@ class ChannelStrip extends AudioRouter {
 }
 
 ChannelStrip.propTypes = {
-  audioContext: React.PropTypes.object,
+  audioContext: React.PropTypes.object.isRequired,
   inputNode: React.PropTypes.object,
   outputNode: React.PropTypes.object,
-  gain: React.PropTypes.number,
-  setGain: React.PropTypes.func,
+  gain: React.PropTypes.number.isRequired,
+  setGain: React.PropTypes.func.isRequired,
 
-  pan: React.PropTypes.number,
-  setPan: React.PropTypes.func,
+  pan: React.PropTypes.number.isRequired,
+  setPan: React.PropTypes.func.isRequired,
 
-  mute: React.PropTypes.bool,
-  setMute: React.PropTypes.func
+  mute: React.PropTypes.bool.isRequired,
+  setMute: React.PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
