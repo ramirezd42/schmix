@@ -3,7 +3,8 @@
 import 'webrtc-adapter-test';
 import React, { Component } from 'react';
 import Delay from '../../common/components/effects/Delay';
-import { Navbar, Grid, Col, Button, ButtonToolbar } from 'react-bootstrap';
+import { Grid, Col, Button, ButtonToolbar } from 'react-bootstrap';
+import Navbar from '../../common/components/Navbar';
 
 import * as delayActionCreators from '../../common/components/effects/Delay/Delay.creators';
 import * as landingPageCreators from './LandingPage.creators';
@@ -65,11 +66,7 @@ class LandingPage extends Component {
   render() {
     return (
       <div className="LandingPage">
-        <Navbar className={styles.navbar} fixedTop>
-          <Navbar.Brand className={styles.brand}>
-            Schmix Audio Effects
-          </Navbar.Brand>
-        </Navbar>
+        <Navbar title="Schmix Audio Effects" />
         <Grid className={styles.content}>
           <Col sm={8} smOffset={2}>
             <p>Input Source:</p>

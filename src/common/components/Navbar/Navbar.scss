@@ -1,0 +1,22 @@
+@import "~styles/global/variables";
+
+.navbar {
+  $navbar-background-color: #fff;
+  $box-shadow-color: #555;
+  background-color: $navbar-background-color;
+  border: none;
+  box-shadow: 1px 1px 1px $box-shadow-color;
+
+  .icon {
+    background-color: $theme-color-primary;
+  }
+
+  .brand {
+    padding: 5px;
+    color: $theme-color-text;
+  }
+
+  .collapseIn {
+    padding-bottom: 15px;
+  }
+}
