@@ -15,8 +15,9 @@ class ChannelStripInterface extends Component {
             label="Pan"
             value={this.props.pan}
             setValue={this.props.setPan}
-            min={-100}
-            max={100}
+            min={-1}
+            max={1}
+            precision={2}
           />
           <Fader
             value={this.props.gain}
