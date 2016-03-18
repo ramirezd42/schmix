@@ -1,0 +1,10 @@
+.container {
+  composes: container from "../container.scss";
+  display: flex;
+  flex-direction: column;
+}
+
+.channels {
+  padding: 20px;
+  display: flex;
+}

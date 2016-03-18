@@ -1,9 +1,17 @@
+import Guid from 'guid';
 import React from 'react';
 import { autobind } from 'core-decorators';
 import classNames from 'classnames';
 import styles from './Switch.scss';
 
 class Switch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: Guid.create().value
+    };
+  }
+
   @autobind
   _handleClick() {
     this.props.setValue(!this.props.value);
@@ -17,14 +25,14 @@ class Switch extends React.Component {
     return (
       <div className={styles.container}>
         <input
+          id={this.state.id}
           className={styles.switch}
           type="checkbox"
-          id={this.props.id}
           checked={this.props.value}
           onClick={this._handleClick}
         >
         </input>
-        <label htmlFor={this.props.id}>
+        <label htmlFor={this.state.id}>
           {this.props.label}
           <span className={spanClass}></span>
         </label>
@@ -34,7 +42,6 @@ class Switch extends React.Component {
 }
 
 Switch.propTypes = {
-  id: React.PropTypes.string.isRequired,
   label: React.PropTypes.string.isRequired,
   value: React.PropTypes.bool.isRequired,
   setValue: React.PropTypes.func.isRequired

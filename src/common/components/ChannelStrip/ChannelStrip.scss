@@ -5,6 +5,7 @@ $border-color: lighten($theme-color-muted, 20);
 .container {
   border-left: 1px solid $border-color;
   padding-bottom: 10px;
+  width: 100px;
 
   &:last-child {
     border-right: 1px solid $border-color;

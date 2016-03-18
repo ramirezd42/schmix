@@ -52,11 +52,18 @@ class Delay extends Component {
         connectToOutput={this.connectToOutput}
       >
         <DelayInterface
-          bypass={this.props.state.bypass} setBypass={this.props.setBypass}
-          feedback={this.props.state.feedback} setFeedback={this.props.setFeedback}
-          feedbackMin={0} feedbackMax={100}
-          delayAmount={this.props.state.delayAmount} setDelayAmount={this.props.setDelayAmount}
-          delayMin={0} delayMax={1000}
+          bypass={this.props.state.bypass}
+          setBypass={this.props.setBypass}
+
+          feedback={this.props.state.feedback}
+          setFeedback={this.props.setFeedback}
+          feedbackMin={0}
+          feedbackMax={100}
+
+          delayAmount={this.props.state.delayAmount}
+          setDelayAmount={this.props.setDelayAmount}
+          delayMin={0}
+          delayMax={1000}
         />
       </AudioRouter>
     );
