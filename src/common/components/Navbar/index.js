@@ -7,7 +7,7 @@ class Navbar extends Component {
     return (
       <BootstrapNavbar className={styles.navbar} fixedTop>
         <BootstrapNavbar.Brand className={styles.brand}>
-          {this.props.title}
+          {this.props.children}
         </BootstrapNavbar.Brand>
       </BootstrapNavbar>
     );
@@ -15,7 +15,7 @@ class Navbar extends Component {
 }
 
 Navbar.propTypes = {
-  title: React.PropTypes.string
+  children: React.PropTypes.element
 };
 
 export default Navbar;

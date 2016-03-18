@@ -41,37 +41,44 @@ class Mixer extends Component {
 
   render() {
     return (
+    <div>
+    <Navbar title="Mixer Demo">
+        <div>
+          <div className={styles.title}>Mixer Demo</div>
+          <input
+            className={styles.file}
+            type="file"
+            accept="audio/*"
+            onChange={this.fileChanged}j
+          />
+        </div>
+      </Navbar>
       <div className={styles.container}>
-        <Navbar title="Mixer Demo"/>
-        <Grid>
-          <p>Welcome to the mixer.</p>
-          <input type="file" accept="audio/*" onChange={this.fileChanged}/>
-          <Row>
-            <Col xs={12} className={styles.channels}>
-              {this.props.tracks.map((track, i) => (
-                <ChannelStrip
-                  key={`track_${i}`}
-                  index={i}
+        <div className={styles.channels}>
+          {this.props.tracks.map((track, i) => (
+            <ChannelStrip
+              key={`track_${i}`}
+              index={i}
 
-                  audioContext={this.state.audioContext}
-                  inputNode={this.state.inputNodes[i]}
-                  outputNode={this.state.outputNode}
+              audioContext={this.state.audioContext}
+              inputNode={this.state.inputNodes[i]}
+              outputNode={this.state.outputNode}
 
-                  gain={track.get('gain')}
-                  setGain={this.props.setGain}
+              gain={track.get('gain')}
+              setGain={this.props.setGain}
 
-                  mute={track.get('mute')}
-                  setMute={this.props.setMute}
+              mute={track.get('mute')}
+              setMute={this.props.setMute}
 
-                  pan={track.get('pan')}
-                  setPan={this.props.setPan}
+              pan={track.get('pan')}
+              setPan={this.props.setPan}
 
-                />
-              ))}
-            </Col>
-          </Row>
-        </Grid>
+            />
+          ))}
+        </div>
+        <div className={styles.spacer}/>
       </div>
+    </div>
     );
   }
 }
