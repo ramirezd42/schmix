@@ -8,6 +8,9 @@ $strip-width: 1px;
 .container {
   width: 100%;
   text-align: center;
+  flex-grow: 1;
+  flex-direction: column;
+  display: flex;
 }
 
 .control {
@@ -15,10 +18,10 @@ $strip-width: 1px;
   display: flex;
   justify-content: center;
   padding: 5px;
+  flex-grow: 1;
 }
 
 .fader {
-  height: 300px;
   width: 100%;
   background: $theme-color-white;
   position: relative;

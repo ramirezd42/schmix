@@ -1,10 +1,31 @@
+@import "~styles/global/variables";
+
+.title {
+  text-transform: uppercase;
+}
+
+.file {
+  font-size: 10px;
+  line-height: 10px;
+  padding-top: 5px;
+  color: $theme-color-primary;
+}
+
 .container {
   composes: container from "../container.scss";
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .channels {
-  padding: 20px;
   display: flex;
+  height: 500px;
+}
+
+.spacer {
+  display: flex;
+  flex-grow: 1;
+  background: lighten($theme-color-secondary, 25);
 }
