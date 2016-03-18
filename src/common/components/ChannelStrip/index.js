@@ -14,10 +14,11 @@ class ChannelStrip extends Component {
     this.gainNode = props.audioContext.createGain();
     this.gainNode.gain.value = props.gain;
 
-    this.panNode = props.audioContext.createGain();
+    this.panNode = props.audioContext.createStereoPanner();
+    this.panNode.pan.value = props.pan;
 
     this.muteNode = props.audioContext.createGain();
-    // this.muteNode.gain.value = props.mute ? 0 : 1;
+    this.muteNode.gain.value = props.mute ? 0 : 1;
 
     this.gainNode.connect(this.panNode);
     this.panNode.connect(this.muteNode);
@@ -25,7 +26,8 @@ class ChannelStrip extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.gainNode.gain.value = nextProps.gain;
-    // this.muteNode.gain.value = nextProps.mute ? 0 : 1;
+    this.muteNode.gain.value = nextProps.mute ? 0 : 1;
+    this.panNode.pan.value = nextProps.pan;
   }
 
   @autobind
