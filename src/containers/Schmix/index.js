@@ -3,17 +3,16 @@
 import 'webrtc-adapter-test';
 import Immutable from 'immutable';
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+import Mixer from '../../common/components/Mixer';
 
 import * as mixerActionCreators from './creators';
 import { connect } from 'react-redux';
 
 import Navbar from '../../common/components/Navbar';
-import ChannelStrip from '../../common/components/ChannelStrip';
-import styles from './Mixer.scss';
+import styles from './Schmix.scss';
 import { autobind } from 'core-decorators';
 
-class Mixer extends Component {
+class Schmix extends Component {
   constructor(props) {
     super(props);
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -41,49 +40,38 @@ class Mixer extends Component {
 
   render() {
     return (
-    <div>
-    <Navbar title="Mixer Demo">
-        <div>
-          <div className={styles.title}>Mixer Demo</div>
-          <input
-            className={styles.file}
-            type="file"
-            accept="audio/*"
-            onChange={this.fileChanged}j
-          />
-        </div>
-      </Navbar>
-      <div className={styles.container}>
-        <div className={styles.channels}>
-          {this.props.tracks.map((track, i) => (
-            <ChannelStrip
-              key={`track_${i}`}
-              index={i}
-
-              audioContext={this.state.audioContext}
-              inputNode={this.state.inputNodes[i]}
-              outputNode={this.state.outputNode}
-
-              gain={track.get('gain')}
-              setGain={this.props.setGain}
-
-              mute={track.get('mute')}
-              setMute={this.props.setMute}
-
-              pan={track.get('pan')}
-              setPan={this.props.setPan}
-
+      <div>
+        <Navbar>
+          <div>
+            <div className={styles.title}>Schmix</div>
+            <input
+              className={styles.file}
+              type="file"
+              accept="audio/*"
+              onChange={this.fileChanged}j
             />
-          ))}
+          </div>
+        </Navbar>
+        <div className={styles.container}>
+          <Mixer
+            tracks = {this.props.tracks}
+            inputNodes = {this.state.inputNodes}
+            outputNode = {this.state.outputNode}
+            audioContext = {this.state.audioContext}
+            addTrack = {this.props.addTrack}
+
+            setGain = {this.props.setGain}
+            setPan = {this.props.setPan}
+            setMute = {this.props.setMute}
+          />
+          <div className={styles.spacer}/>
         </div>
-        <div className={styles.spacer}/>
       </div>
-    </div>
     );
   }
 }
 
-Mixer.propTypes = {
+Schmix.propTypes = {
   tracks: React.PropTypes.instanceOf(Immutable.List),
   addTrack: React.PropTypes.func,
 
@@ -104,4 +92,4 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   Object.assign({}, mixerActionCreators)
-)(Mixer);
+)(Schmix);
