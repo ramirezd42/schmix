@@ -26,7 +26,7 @@ if (!DEBUG) {
 }
 
 const globalStyleLoader = {
-  test: /\.s?css$/,
+  test: /\.scss$/,
   exclude: pathStr => pathStr.startsWith(path.resolve(__dirname, '..'))
       && ! pathStr.startsWith(path.resolve(__dirname, '../src/styles/global')),
   loader: ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
@@ -37,7 +37,7 @@ const globalStyleLoader = {
 };
 
 const moduleStyleLoader = {
-  test: /\.s?css$/,
+  test: /\.scss$/,
   include: pathStr => pathStr.startsWith(path.resolve(__dirname, '../src')),
   exclude: pathStr => pathStr.startsWith(path.resolve(__dirname, '../src/styles/global')),
   loader: ExtractTextPlugin.extract(`${STYLE_LOADER}`, [
@@ -143,7 +143,6 @@ const styleBundleName = DEBUG ? 'styles.css' : util.format('styles.%s.css', pkg.
 
 const appConfig = merge({}, config, {
   entry: [
-    ...(WATCH ? ['webpack-hot-middleware/client'] : []),
     './src/app.js'
   ],
   output: {
@@ -202,6 +201,10 @@ const appConfig = merge({}, config, {
       { test: /\.(ttf|eot)$/, loader: 'file' }
     ]
   },
+  sassResources: [
+    './src/styles/variables.scss',
+    './src/styles/global.scss'
+  ],
 });
 
 //
@@ -246,7 +249,11 @@ const serverConfig = merge({}, config, {
       globalStyleLoader,
       moduleStyleLoader
     ]
-  }
+  },
+  sassResources: [
+    './src/styles/variables.scss',
+    './src/styles/global.scss'
+  ],
 });
 
 module.exports = [appConfig, serverConfig];

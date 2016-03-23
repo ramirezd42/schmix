@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ReduxRouter } from 'redux-router';
-import configureStore from './common/store/configureStore';
+import configureStore from './store/configureStore';
 
 // Create application containers for React app and CSS
 const appContainer = document.getElementById('app');

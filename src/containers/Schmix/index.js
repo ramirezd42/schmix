@@ -3,12 +3,12 @@
 import 'webrtc-adapter-test';
 import Immutable from 'immutable';
 import React, { Component } from 'react';
-import Mixer from '../../common/components/Mixer';
+import Mixer from '../../components/Mixer';
 
 import * as mixerActionCreators from './creators';
 import { connect } from 'react-redux';
 
-import Navbar from '../../common/components/Navbar';
+import Navbar from '../../components/Navbar';
 import styles from './Schmix.scss';
 import { autobind } from 'core-decorators';
 
@@ -43,7 +43,7 @@ class Schmix extends Component {
       <div>
         <Navbar>
           <div>
-            <div className={styles.title}>Schmix</div>
+            <div className={styles.title}>Schmix-Test</div>
             <input
               className={styles.file}
               type="file"
