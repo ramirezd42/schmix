@@ -85,6 +85,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --inline --hot"
+    "build:production": "NODE_ENV=production webpack",
+    "start": "NODE_ENV=development webpack-dev-server --inline --hot"
   }
 }

@@ -106,7 +106,10 @@ const config = {
   },
 
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      ENV: require(`${__dirname}/env.${ DEBUG ? 'local' : 'prod' }.js`)
+    })
   ],
 
   resolve: {
