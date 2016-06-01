@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { ReduxRouter } from 'redux-router';
 import configureStore from './store/configureStore';
 
-// Create application containers for React app and CSS
 const appContainer = document.getElementById('app');
 
 /**
