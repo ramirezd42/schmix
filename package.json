@@ -41,6 +41,7 @@
     "extract-text-webpack-plugin": "~0.8.2",
     "file-loader": "^0.8.4",
     "gaze": "^0.5.1",
+    "google-protobuf": "^3.0.0-alpha.6.2",
     "guid": "0.0.12",
     "history": "^1.12.6",
     "json-loader": "^0.5.4",
@@ -86,7 +87,7 @@
     "electron-prebuilt": "^1.1.2",
     "electron-rebuild": "^1.1.4",
     "webpack-dev-server": "^1.14.1",
-    "zmq": "^2.15.2"
+    "zmq": "^2.15.3"
   },
   "scripts": {
     "build": "webpack",

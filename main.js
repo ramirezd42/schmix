@@ -1,19 +1,17 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 const zmq = require('zmq');
-const fs = require('fs');
+const personMessages = require('./messages/person_pb.js');
+const actionMessages = require('./messages/action_pb.js');
 
-const sync = zmq.socket('pull');
-sync.bind('tcp://127.0.0.1:5564');
-
-const protobuf = require('protocol-buffers');
-const messageFormats = protobuf(fs.readFileSync('test.proto'));
-
-const buf = messageFormats.Person.encode({
-  name: 'Dave Ramirez',
+const person = new personMessages.Person({
+  name: '/Users/dxr224/Dropbox/closures{} - To Reach with Little Arms (DEMO)/03 - In Breaking Through.mp3',
   id: 1,
   email: 'ramirezd42@gmail.com',
   phone: [{
@@ -22,28 +20,34 @@ const buf = messageFormats.Person.encode({
   }]
 });
 
-const pub = zmq.socket('pub');
-pub.bind('tcp://127.0.0.1:5565');
+const action = new actionMessages.Action();
+action.setType('person');
+// action.setPayload(person);
 
-// Subscriber notifies when ready to receive messages
-sync.on('message', data => {
-  console.log('data:');
-  console.log(data);
-  sync.close(); // close sync after connection established to avoid resending sent data
+// socket to talk to server
+console.log('Connecting to hello world server…');
+const requester = zmq.socket('req');
 
-  let updates = 0;
-  const interval = setInterval(() => {
-    pub.send(buf);
-    if (updates >= 10) {
-      pub.send('END');
-      clearInterval(interval);
-    }
-  }, 1000);
+let x = 0;
+requester.on('message', reply => {
+  console.log('Received reply', x, ': [', reply.toString(), ']');
+  x += 1;
+  if (x === 10) {
+    requester.close();
+    process.exit(0);
+  }
 });
-// Create application containers for React app and CSS
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+requester.connect('tcp://localhost:5555');
+
+for (let i = 0; i < 10; i++) {
+  console.log('Sending request', i, '…');
+  requester.send(new Buffer(action.serializeBinary()));
+}
+
+process.on('SIGINT', () =>
+  requester.close()
+);
 let mainWindow;
 
 function createWindow() {
