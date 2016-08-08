@@ -6,48 +6,50 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-const zmq = require('zmq');
-const personMessages = require('./messages/person_pb.js');
-const actionMessages = require('./messages/action_pb.js');
 
-const person = new personMessages.Person({
-  name: '/Users/dxr224/Dropbox/closures{} - To Reach with Little Arms (DEMO)/03 - In Breaking Through.mp3',
-  id: 1,
-  email: 'ramirezd42@gmail.com',
-  phone: [{
-    number: '215-641-0197',
-    type: 1
-  }]
-});
+// const zmq = require('zmq');
+// const personMessages = require('./messages/person_pb.js');
+// const actionMessages = require('./messages/action_pb.js');
+//
+// const person = new personMessages.Person({
+//   name: '/Users/dxr224/Dropbox/closures{} - To Reach with Little Arms (DEMO)/03 - In Breaking Through.mp3',
+//   id: 1,
+//   email: 'ramirezd42@gmail.com',
+//   phone: [{
+//     number: '215-641-0197',
+//     type: 1
+//   }]
+// });
+//
+// const action = new actionMessages.Action();
+// action.setType('person');
+// // action.setPayload(person);
+//
+// // socket to talk to server
+// console.log('Connecting to hello world server…');
+// const requester = zmq.socket('req');
+//
+// let x = 0;
+// requester.on('message', reply => {
+//   console.log('Received reply', x, ': [', reply.toString(), ']');
+//   x += 1;
+//   if (x === 10) {
+//     requester.close();
+//     process.exit(0);
+//   }
+// });
+//
+// requester.connect('tcp://localhost:5555');
+//
+// for (let i = 0; i < 10; i++) {
+//   console.log('Sending request', i, '…');
+//   requester.send(new Buffer(action.serializeBinary()));
+// }
+//
+// process.on('SIGINT', () =>
+//   requester.close()
+// );
 
-const action = new actionMessages.Action();
-action.setType('person');
-// action.setPayload(person);
-
-// socket to talk to server
-console.log('Connecting to hello world server…');
-const requester = zmq.socket('req');
-
-let x = 0;
-requester.on('message', reply => {
-  console.log('Received reply', x, ': [', reply.toString(), ']');
-  x += 1;
-  if (x === 10) {
-    requester.close();
-    process.exit(0);
-  }
-});
-
-requester.connect('tcp://localhost:5555');
-
-for (let i = 0; i < 10; i++) {
-  console.log('Sending request', i, '…');
-  requester.send(new Buffer(action.serializeBinary()));
-}
-
-process.on('SIGINT', () =>
-  requester.close()
-);
 let mainWindow;
 
 function createWindow() {
