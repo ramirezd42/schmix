@@ -2,11 +2,11 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ReduxRouter } from 'redux-router';
 import configureStore from './store/configureStore';
+import App from './containers/App';
+import Schmix from './containers/Schmix';
 
 const appContainer = document.getElementById('app');
-
 /**
  * Render React App on Client
  */
@@ -15,7 +15,9 @@ function render() {
   // Render routes
   ReactDOM.render(
     <Provider store={store}>
-      <ReduxRouter />
+      <App>
+        <Schmix/>
+      </App>
     </Provider>,
     appContainer
   );
