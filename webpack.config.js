@@ -69,7 +69,7 @@ const JS_LOADER = {
   query: {
     cacheDirectory: true,
     presets: ['es2015', 'stage-0', 'react'],
-    plugins: ['transform-decorators-legacy',
+    plugins: !DEBUG ? ['transform-decorators-legacy'] : ['transform-decorators-legacy',
       ['react-transform', {
         // must be an array of objects
         transforms: [{
