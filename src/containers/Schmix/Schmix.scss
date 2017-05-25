@@ -1,5 +1,14 @@
 @import "~styles/global/variables";
 
+.brand {
+  display: inline-block;
+}
+
+.play {
+  float: right;
+  margin-top: 8px;
+}
+
 .title {
   text-transform: uppercase;
 }

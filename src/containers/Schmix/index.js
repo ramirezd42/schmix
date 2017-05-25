@@ -19,7 +19,8 @@ class Schmix extends Component {
     this.state = {
       audioContext,
       inputNodes: [],
-      outputNode: audioContext.destination
+      outputNode: audioContext.destination,
+      bufferSources: []
     };
   }
 
@@ -32,17 +33,23 @@ class Schmix extends Component {
         bufferSource.buffer = buffer;
       });
       this.setState({ inputNodes: this.state.inputNodes.concat([bufferSource]) });
-      bufferSource.start(0);
+      this.state.bufferSources.push(bufferSource);
+      // bufferSource.start(0);
       this.props.addTrack();
     };
     reader.readAsArrayBuffer(evt.target.files[0]);
+  }
+
+  @autobind
+  playBuffers() {
+    this.state.bufferSources.forEach(source => source.start(0));
   }
 
   render() {
     return (
       <div>
         <Navbar>
-          <div>
+          <div className={styles.brand}>
             <div className={styles.title}>Schmix-Test</div>
             <input
               className={styles.file}
@@ -51,6 +58,12 @@ class Schmix extends Component {
               onChange={this.fileChanged}j
             />
           </div>
+          <button
+            className={styles.play}
+            type="button"
+            onClick={this.playBuffers}
+          > Play
+          </button>
         </Navbar>
         <div className={styles.container}>
           <Mixer
