@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const merge = require('lodash/object/merge');
+const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const DEBUG = process.env.NODE_ENV !== 'production';
@@ -151,6 +152,8 @@ const styleBundleName = 'styles.css';
 
 const appConfig = merge({}, config, {
   context: __dirname,
+  target: 'node',
+  externals: [nodeExternals()],
   entry: [
     './src/app.js',
   ],

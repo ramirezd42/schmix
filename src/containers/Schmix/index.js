@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-
-import 'webrtc-adapter-test';
+const { NodeAudio, SoundBuffer, StereoPannerNode, PluginNode } = require('node-audio')
 import Immutable from 'immutable';
 import React, { Component } from 'react';
 import Mixer from '../../components/Mixer';
@@ -15,34 +14,40 @@ import { autobind } from 'core-decorators';
 class Schmix extends Component {
   constructor(props) {
     super(props);
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioContext = NodeAudio.makeAudioContext()
     this.state = {
       audioContext,
       inputNodes: [],
-      outputNode: audioContext.destination,
+      bufferNodes: [],
+      outputNode: audioContext.destination(),
       bufferSources: []
     };
   }
 
   @autobind
   fileChanged(evt) {
-    const bufferSource = this.state.audioContext.createBufferSource();
-    const reader = new FileReader();
-    reader.onload = (_evt) => {
-      this.state.audioContext.decodeAudioData(_evt.target.result, (buffer) => {
-        bufferSource.buffer = buffer;
-      });
-      this.setState({ inputNodes: this.state.inputNodes.concat([bufferSource]) });
-      this.state.bufferSources.push(bufferSource);
-      // bufferSource.start(0);
-      this.props.addTrack();
-    };
-    reader.readAsArrayBuffer(evt.target.files[0]);
+    const { audioContext } = this.state
+    const bufferSource = new SoundBuffer(
+      evt.target.files[0].path,
+      audioContext.sampleRate()
+    )
+    const pluginNode = new PluginNode('/Library/Audio/Plug-Ins/VST3/PrimeEQ.vst3', audioContext.sampleRate())
+    const inputNode = new StereoPannerNode(audioContext.sampleRate())
+    inputNode.connect(audioContext, pluginNode, 0, 0)
+
+    this.setState(previousState => ({ inputNodes: previousState.inputNodes.concat(pluginNode)}));
+    this.setState(previousState => ({ bufferNodes: previousState.bufferNodes.concat(inputNode)}));
+    this.setState(previousState => ({ bufferSources: previousState.bufferSources.concat(bufferSource)}));
+    this.props.addTrack();
   }
 
   @autobind
   playBuffers() {
-    this.state.bufferSources.forEach(source => source.start(0));
+    this.state.bufferSources.forEach((buffer, i) => buffer.playOnNode(
+      this.state.audioContext,
+      this.state.bufferNodes[i],
+      0
+    ));
   }
 
   render() {

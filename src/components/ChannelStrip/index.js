@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ChannelStripInterface from './interface';
 import AudioRouter from '../AudioRouter';
+import { GainNode, StereoPannerNode } from 'node-audio'
 import { autobind } from 'core-decorators';
 
 class ChannelStrip extends Component {
@@ -11,34 +12,34 @@ class ChannelStrip extends Component {
     this.setPan = value => props.setPan(this.props.index, value);
     this.setMute = value => props.setMute(this.props.index, value);
 
-    this.gainNode = props.audioContext.createGain();
-    this.gainNode.gain.value = props.gain;
+    this.gainNode = new GainNode(this.props.audioContext.sampleRate())
+    this.gainNode.gain().setValue(props.gain);
 
-    this.panNode = props.audioContext.createStereoPanner();
-    this.panNode.pan.value = props.pan;
+    this.panNode = new StereoPannerNode(this.props.audioContext.sampleRate())
+    this.panNode.pan().setValue(props.pan);
 
-    this.muteNode = props.audioContext.createGain();
-    this.muteNode.gain.value = props.mute ? 0 : 1;
+    this.muteNode = new GainNode(this.props.audioContext.sampleRate())
+    this.muteNode.gain().setValue(props.mute ? 0 : 1);
 
-    this.gainNode.connect(this.panNode);
-    this.panNode.connect(this.muteNode);
+    this.gainNode.connect(this.props.audioContext, this.panNode, 0, 0);
+    this.panNode.connect(this.props.audioContext, this.muteNode, 0, 0);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.gainNode.gain.value = nextProps.gain;
-    this.muteNode.gain.value = nextProps.mute ? 0 : 1;
-    this.panNode.pan.value = nextProps.pan;
+    this.gainNode.gain().setValue(nextProps.gain);
+    this.muteNode.gain().setValue(nextProps.mute ? 0 : 1);
+    this.panNode.pan().setValue(nextProps.pan);
   }
 
   @autobind
   connectInput(inputNode) {
-    inputNode.connect(this.gainNode);
+    inputNode.connect(this.props.audioContext, this.gainNode, 0, 0);
   }
 
   @autobind
   connectToOutput(outputNode) {
-    this.muteNode.disconnect();
-    this.muteNode.connect(outputNode);
+    this.muteNode.disconnect(this.props.audioContext, 0);
+    this.muteNode.connect(this.props.audioContext, this.props.outputNode, 0, 0);
   }
 
   render() {
