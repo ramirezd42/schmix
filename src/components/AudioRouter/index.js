@@ -15,7 +15,7 @@ class AudioRouter extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.inputNode !== nextProps.inputNode) {
       if (this.props.inputNode) {
-        this.props.inputNode.disconnect();
+        this.props.inputNode.disconnect(this.props.audioContext, 0);
       }
       this.props.connectInput(nextProps.inputNode, this.props.inputNode);
     }
@@ -36,7 +36,8 @@ AudioRouter.propTypes = {
   outputNode: React.PropTypes.object,
   children: React.PropTypes.element.isRequired,
   connectInput: React.PropTypes.func.isRequired,
-  connectToOutput: React.PropTypes.func.isRequired
+  connectToOutput: React.PropTypes.func.isRequired,
+  audioContext: React.PropTypes.object
 };
 
 export default AudioRouter;
