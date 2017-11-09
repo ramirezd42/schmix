@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
-const { NodeAudio, SoundBuffer, StereoPannerNode, PluginNode } = require('node-audio')
+const { NodeAudio, SoundBuffer, StereoPannerNode, PluginNode, GainNode } = require('node-audio')
+const fs = require('fs')
+
 import Immutable from 'immutable';
 import React, { Component } from 'react';
 import Mixer from '../../components/Mixer';
@@ -11,6 +13,14 @@ import Navbar from '../../components/Navbar';
 import styles from './Schmix.scss';
 import { autobind } from 'core-decorators';
 
+const pluginDir = '/Library/Audio/Plug-Ins/VST3'
+
+const buildBuffers = (audioContext, files) => 
+  files.map((file) => new SoundBuffer( file, audioContext.sampleRate()))
+
+const buildInputNodes = (audioContext, files) => 
+  files.map(() => new GainNode(audioContext.sampleRate()))
+
 class Schmix extends Component {
   constructor(props) {
     super(props);
@@ -20,35 +30,51 @@ class Schmix extends Component {
       inputNodes: [],
       bufferNodes: [],
       outputNode: audioContext.destination(),
-      bufferSources: []
+      files: [],
+      bufferSources: [],
+      availablePlugins: [],
+      selectedPlugins: []
     };
+  }
+
+  componentDidMount() {
+    fs.readdir(pluginDir, (err, files) => {
+      console.log(files)
+      const pluginDescriptors = files.map(f =>({name: f, path: `${pluginDir}/${f}`}))
+      this.setState(previousState => ({availablePlugins: pluginDescriptors}))
+    })
   }
 
   @autobind
   fileChanged(evt) {
     const { audioContext } = this.state
-    const bufferSource = new SoundBuffer(
-      evt.target.files[0].path,
-      audioContext.sampleRate()
-    )
-    const pluginNode = new PluginNode('/Library/Audio/Plug-Ins/VST3/PrimeEQ.vst3', audioContext.sampleRate())
-    const inputNode = new StereoPannerNode(audioContext.sampleRate())
-    inputNode.connect(audioContext, pluginNode, 0, 0)
+    const filePath = evt.target.files[0].path 
 
-    this.setState(previousState => ({ inputNodes: previousState.inputNodes.concat(pluginNode)}));
-    this.setState(previousState => ({ bufferNodes: previousState.bufferNodes.concat(inputNode)}));
-    this.setState(previousState => ({ bufferSources: previousState.bufferSources.concat(bufferSource)}));
+    this.setState(previousState => ({ files: previousState.files.concat(filePath)}));
     this.props.addTrack();
   }
 
   @autobind
-  playBuffers() {
-    this.state.bufferSources.forEach((buffer, i) => buffer.playOnNode(
+  startPlayback() {
+    const bufferSources = buildBuffers(this.state.audioContext, this.state.files)
+    this.setState(state => ({bufferSources}))
+
+    const inputNodes = buildInputNodes(this.state.audioContext, this.state.files)
+    this.setState(state => ({inputNodes}))
+
+    bufferSources.forEach((buffer, i) => buffer.playOnNode(
       this.state.audioContext,
-      this.state.bufferNodes[i],
+      inputNodes[i],
       0
     ));
   }
+
+  @autobind
+  stopPlayback() {
+    const inputNodes = buildInputNodes(this.state.audioContext, this.state.files)
+    this.setState(state => ({inputNodes}))
+  }
+
 
   render() {
     return (
@@ -63,12 +89,18 @@ class Schmix extends Component {
               onChange={this.fileChanged}j
             />
           </div>
-          <button
-            className={styles.play}
-            type="button"
-            onClick={this.playBuffers}
-          > Play
-          </button>
+          <div className={styles.buttonOuter}
+            onClick={this.startPlayback}
+          >
+            <div className={styles.playButton}> </div>
+          </div>
+
+          <div className={styles.buttonOuter}
+            onClick={this.stopPlayback}
+          >
+            <div className={styles.stopButton}> </div>
+          </div>
+
         </Navbar>
         <div className={styles.container}>
           <Mixer
@@ -81,6 +113,8 @@ class Schmix extends Component {
             setGain = {this.props.setGain}
             setPan = {this.props.setPan}
             setMute = {this.props.setMute}
+
+            availablePlugins={this.state.availablePlugins}
           />
           <div className={styles.spacer}/>
         </div>

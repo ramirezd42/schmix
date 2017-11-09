@@ -8,7 +8,7 @@ export const SET_MUTE = 'SET_MUTE';
 const initialTrackState = Immutable.Map({
   gain: 0.5,
   pan: 0,
-  mute: false
+  mute: false,
 });
 
 const track = (state, action) => {

@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import ChannelStripInterface from './interface';
 import AudioRouter from '../AudioRouter';
-import { GainNode, StereoPannerNode } from 'node-audio'
+import { GainNode, StereoPannerNode, PluginNode } from 'node-audio'
 import { autobind } from 'core-decorators';
 
 class ChannelStrip extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      selectedPlugins: [],
+      pluginNodes: [],
+      pluginInputNodes: []
+    }
 
     this.setGain = value => props.setGain(this.props.index, value);
     this.setPan = value => props.setPan(this.props.index, value);
@@ -21,8 +27,11 @@ class ChannelStrip extends Component {
     this.muteNode = new GainNode(this.props.audioContext.sampleRate())
     this.muteNode.gain().setValue(props.mute ? 0 : 1);
 
+    this.outputNode = new GainNode(this.props.audioContext.sampleRate())
+
     this.gainNode.connect(this.props.audioContext, this.panNode, 0, 0);
     this.panNode.connect(this.props.audioContext, this.muteNode, 0, 0);
+    this.muteNode.connect(this.props.audioContext, this.outputNode, 0, 0);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -38,8 +47,26 @@ class ChannelStrip extends Component {
 
   @autobind
   connectToOutput(outputNode) {
-    this.muteNode.disconnect(this.props.audioContext, 0);
-    this.muteNode.connect(this.props.audioContext, this.props.outputNode, 0, 0);
+    this.outputNode.disconnect(this.props.audioContext, 0);
+    this.outputNode.connect(this.props.audioContext, this.props.outputNode, 0, 0);
+  }
+
+  @autobind
+  addPlugin(pluginDescriptor) {
+    const { audioContext } = this.props
+    console.log(JSON.stringify(pluginDescriptor))
+    const pluginNode = new PluginNode(pluginDescriptor.path, audioContext.sampleRate())
+    const panNode = new StereoPannerNode(audioContext.sampleRate())
+    this.setState(prev => ({
+      selectedPlugins: prev.selectedPlugins.concat([pluginDescriptor]),
+      pluginNodes: prev.pluginNodes.concat([pluginNode]),
+      pluginInputNodes: prev.panNodes.concat([panNode]),
+    }))
+
+    this.muteNode.disconnect(audioContext, 0) 
+    this.muteNode.connect(audioContext, panNode, 0, 0) 
+    panNode.connect(audioContext, pluginNode, 0, 0)
+    pluginNode.connect(audioContext, this.outputNode, 0 ,0)
   }
 
   render() {
@@ -49,6 +76,7 @@ class ChannelStrip extends Component {
         outputNode={this.props.outputNode}
         connectInput={this.connectInput}
         connectToOutput={this.connectToOutput}
+        audioContext={this.props.audioContext}
       >
         <ChannelStripInterface
           gain={this.props.gain}
@@ -59,6 +87,10 @@ class ChannelStrip extends Component {
 
           mute={this.props.mute}
           setMute={this.setMute}
+
+          availablePlugins={this.props.availablePlugins}
+          selectedPlugins={this.state.selectedPlugins}
+          addPlugin={this.addPlugin}
         />
     </AudioRouter>
     );
@@ -77,7 +109,9 @@ ChannelStrip.propTypes = {
   setPan: React.PropTypes.func,
 
   mute: React.PropTypes.bool.isRequired,
-  setMute: React.PropTypes.func
+  setMute: React.PropTypes.func,
+
+  availablePlugins: React.PropTypes.array
 };
 
 ChannelStrip.gainNode = null;

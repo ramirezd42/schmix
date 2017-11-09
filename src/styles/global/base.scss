@@ -9,7 +9,21 @@ html {
   font-weight: $theme-default-font-weight;
 }
 
+body {
+  overflow-y: hidden;
+}
 button,
 .btn {
   text-transform: uppercase;
+}
+
+label {
+  font-weight: 100;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+select {
+  text-transform: uppercase;
+  font-size:10px;
 }

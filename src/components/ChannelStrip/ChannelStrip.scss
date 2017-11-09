@@ -4,13 +4,17 @@ $border-color: lighten($theme-color-muted, 20);
 
 .container {
   border-left: 1px solid $border-color;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  width: 100px;
+  padding: 10px;
+  width: 120px;
   display: flex;
   flex-direction: column;
+  background-color: white;
 
   &:last-child {
     border-right: 1px solid $border-color;
   }
+}
+
+.plugins {
+  margin: 20px 0px;
 }

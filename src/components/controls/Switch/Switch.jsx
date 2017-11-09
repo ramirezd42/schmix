@@ -32,7 +32,7 @@ class Switch extends React.Component {
           onClick={this._handleClick}
         >
         </input>
-        <label htmlFor={this.state.id}>
+        <label htmlFor={this.state.id} className={styles.label}>
           {this.props.label}
           <span className={spanClass}></span>
         </label>

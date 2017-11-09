@@ -33,6 +33,7 @@ class Mixer extends Component {
             pan={track.get('pan')}
             setPan={this.props.setPan}
 
+            availablePlugins={this.props.availablePlugins}
           />
         ))}
       </div>
@@ -48,7 +49,9 @@ Mixer.propTypes = {
 
   setGain: React.PropTypes.func,
   setPan: React.PropTypes.func,
-  setMute: React.PropTypes.func
+  setMute: React.PropTypes.func,
+
+  availablePlugins: React.PropTypes.array
 };
 
 export default Mixer;
