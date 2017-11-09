@@ -48,7 +48,7 @@
     "lodash": "3.10.1",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
-    "node-audio": "0.0.8",
+    "node-audio": "0.0.10",
     "node-sass": "^3.2.0",
     "postcss": "^5.0.4",
     "postcss-loader": "^0.5.1",
